@@ -1,0 +1,19 @@
+Class Index,Class Name
+0,train_val_call
+1,train_val_dislike
+2,train_val_fist
+3,train_val_four
+4,train_val_like
+5,train_val_mute
+6,train_val_ok
+7,train_val_one
+8,train_val_palm
+9,train_val_peace
+10,train_val_peace_inverted
+11,train_val_rock
+12,train_val_stop
+13,train_val_stop_inverted
+14,train_val_three
+15,train_val_three2
+16,train_val_two_up
+17,train_val_two_up_inverted
