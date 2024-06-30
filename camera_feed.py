@@ -19,6 +19,7 @@
 # # STEP 5: Process the classification result. In this case, visualize it.
 # annotated_image = draw_landmarks_on_image(image.numpy_view(), detection_result)
 # cv2_imshow(cv2.cvtColor(annotated_image, cv2.COLOR_RGB2BGR))
+import copy
 
 import cv2
 import mediapipe as mp
@@ -72,7 +73,7 @@ inference_engine = InferenceEngine()
 mp_hands = mp.solutions.hands.Hands(
     static_image_mode=True,
     max_num_hands=2,
-    min_detection_confidence=0.7,
+    min_detection_confidence=0.4,
     min_tracking_confidence=0.5)
 
 cap = cv2.VideoCapture(0)
@@ -95,7 +96,7 @@ while cap.isOpened():
 
     # Draw hand landmarks if a hand is detected
     if results.multi_hand_landmarks:
-        for hand_landmarks in results.multi_hand_landmarks:
+        for hand_landmarks, handedness in zip(results.multi_hand_landmarks, results.multi_handedness):
             mp.solutions.drawing_utils.draw_landmarks(image, hand_landmarks, mp.solutions.hands.HAND_CONNECTIONS)
             bbox = utils.calculate_bounding_box(image, hand_landmarks)
 
@@ -107,8 +108,9 @@ while cap.isOpened():
             #     print(f'Landmark {i}: {x:.2f} {y:.2f} {z:.2f})')
             normalized_landmark_list = utils.get_landmark_list(hand_landmarks, image)
             gesture_id = inference_engine(normalized_landmark_list)
-            print(gesture_class_names[gesture_id])
             image = utils.draw_bounding_box(True, image, bbox)
+            image = utils.write_gesture_info(image, bbox, handedness,
+                                             gesture_class_names[gesture_id])
     # Display the resulting image
     cv2.imshow('MediaPipe Hand Landmarks', image)
 

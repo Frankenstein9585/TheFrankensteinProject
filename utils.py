@@ -102,6 +102,18 @@ def draw_bounding_box(use_bbox, image, bbox):
         return image
 
 
+def write_gesture_info(image, bbox, handedness, gesture_info):
+    cv2.rectangle(image, (bbox[0], bbox[1]), (bbox[2], bbox[1] - 22),
+                  (0, 0, 0), -1)
+    gesture_text = handedness.classification[0].label[0:]
+    if gesture_info != '':
+        gesture_text = gesture_text + ':' + gesture_info
+    cv2.putText(image, gesture_text, (bbox[0] + 5, bbox[1] - 4),
+                cv2.FONT_HERSHEY_SIMPLEX, 0.6, (255, 255, 255), 1, cv2.LINE_AA)
+
+    return image
+
+
 def get_gesture_class_names(path_to_csv):
     df = pd.read_csv(path_to_csv)
     gesture_class_names = list(df['Class Name'])
