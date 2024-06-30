@@ -66,26 +66,7 @@ from inference_engine import InferenceEngine
 #     cap.release()
 #     cv2.destroyAllWindows()
 
-gestures = {0: 'train_val_call',
-            1: 'train_val_dislike',
-            2: 'train_val_fist',
-            3: 'train_val_four',
-            4: 'train_val_like',
-            5: 'train_val_mute',
-            6: 'train_val_ok',
-            7: 'train_val_one',
-            8: 'train_val_palm',
-            9: 'train_val_peace',
-            10: 'train_val_peace_inverted',
-            11: 'train_val_rock',
-            12: 'train_val_stop',
-            13: 'train_val_stop_inverted',
-            14: 'train_val_three',
-            15: 'train_val_three2',
-            16: 'train_val_two_up',
-            17: 'train_val_two_up_inverted'
-            }
-
+gesture_class_names = utils.get_gesture_class_names('class_names.csv')
 inference_engine = InferenceEngine()
 
 mp_hands = mp.solutions.hands.Hands(
@@ -126,7 +107,7 @@ while cap.isOpened():
             #     print(f'Landmark {i}: {x:.2f} {y:.2f} {z:.2f})')
             normalized_landmark_list = utils.get_landmark_list(hand_landmarks, image)
             gesture_id = inference_engine(normalized_landmark_list)
-            print(gestures[gesture_id])
+            print(gesture_class_names[gesture_id])
             image = utils.draw_bounding_box(True, image, bbox)
     # Display the resulting image
     cv2.imshow('MediaPipe Hand Landmarks', image)

@@ -1,5 +1,6 @@
 import itertools
 
+import pandas as pd
 from mediapipe import solutions
 from mediapipe.framework.formats import landmark_pb2
 import numpy as np
@@ -101,4 +102,7 @@ def draw_bounding_box(use_bbox, image, bbox):
         return image
 
 
-
+def get_gesture_class_names(path_to_csv):
+    df = pd.read_csv(path_to_csv)
+    gesture_class_names = list(df['Class Name'])
+    return gesture_class_names
