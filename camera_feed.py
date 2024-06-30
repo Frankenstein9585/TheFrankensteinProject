@@ -23,6 +23,8 @@
 import cv2
 import mediapipe as mp
 
+import utils
+from inference_engine import InferenceEngine
 
 # def main():
 #     # Initialize MediaPipe Hand model
@@ -64,12 +66,30 @@ import mediapipe as mp
 #     cap.release()
 #     cv2.destroyAllWindows()
 
+gestures = {0: 'train_val_call',
+            1: 'train_val_dislike',
+            2: 'train_val_fist',
+            3: 'train_val_four',
+            4: 'train_val_like',
+            5: 'train_val_mute',
+            6: 'train_val_ok',
+            7: 'train_val_one',
+            8: 'train_val_palm',
+            9: 'train_val_peace',
+            10: 'train_val_peace_inverted',
+            11: 'train_val_rock',
+            12: 'train_val_stop',
+            13: 'train_val_stop_inverted',
+            14: 'train_val_three',
+            15: 'train_val_three2',
+            16: 'train_val_two_up',
+            17: 'train_val_two_up_inverted'
+            }
 
-def normalize_landmarks(landmarks):
-    ...
-
+inference_engine = InferenceEngine()
 
 mp_hands = mp.solutions.hands.Hands(
+    static_image_mode=True,
     max_num_hands=2,
     min_detection_confidence=0.7,
     min_tracking_confidence=0.5)
@@ -96,14 +116,18 @@ while cap.isOpened():
     if results.multi_hand_landmarks:
         for hand_landmarks in results.multi_hand_landmarks:
             mp.solutions.drawing_utils.draw_landmarks(image, hand_landmarks, mp.solutions.hands.HAND_CONNECTIONS)
+            bbox = utils.calculate_bounding_box(image, hand_landmarks)
 
-            for i, landmark in enumerate(hand_landmarks.landmark):
-                x = landmark.x * image.shape[1]
-                y = landmark.y * image.shape[0]
-                z = landmark.z * image.shape[1]  # z is normalized similarly to x
-                # print(f'Landmark {i}: ({x:.2f}, {y:.2f}, {z:.2f})')
-                print(f'Landmark {i}: {x:.2f} {y:.2f} {z:.2f})')
-
+            # for i, landmark in enumerate(hand_landmarks.landmark):
+            #     x = landmark.x * image.shape[1]
+            #     y = landmark.y * image.shape[0]
+            #     z = landmark.z * image.shape[1]  # z is normalized similarly to x
+            #     # print(f'Landmark {i}: ({x:.2f}, {y:.2f}, {z:.2f})')
+            #     print(f'Landmark {i}: {x:.2f} {y:.2f} {z:.2f})')
+            normalized_landmark_list = utils.get_landmark_list(hand_landmarks, image)
+            gesture_id = inference_engine(normalized_landmark_list)
+            print(gestures[gesture_id])
+            image = utils.draw_bounding_box(True, image, bbox)
     # Display the resulting image
     cv2.imshow('MediaPipe Hand Landmarks', image)
 

@@ -75,3 +75,30 @@ def get_landmark_list(hand_landmarks, image):
     return normalized_landmark_list
 
 
+def calculate_bounding_box(image, hand_landmarks):
+    image_width, image_height = image.shape[1], image.shape[0]
+
+    landmark_array = np.empty((0, 2), int)
+
+    for _, landmark in enumerate(hand_landmarks.landmark):
+        landmark_x = min(int(landmark.x * image_width), image_width - 1)
+        landmark_y = min(int(landmark.y * image_height), image_height - 1)
+
+        landmark_point = [np.array((landmark_x, landmark_y))]
+
+        landmark_array = np.append(landmark_array, landmark_point, axis=0)
+
+    x, y, w, h = cv2.boundingRect(landmark_array)
+
+    return [x, y, x + w, y + h]
+
+
+def draw_bounding_box(use_bbox, image, bbox):
+    if use_bbox:
+        cv2.rectangle(image, (bbox[0], bbox[1]), (bbox[2], bbox[3]),
+                      (0, 0, 0), 1)
+
+        return image
+
+
+
