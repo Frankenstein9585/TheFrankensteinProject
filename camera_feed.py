@@ -73,10 +73,12 @@ inference_engine = InferenceEngine()
 mp_hands = mp.solutions.hands.Hands(
     static_image_mode=True,
     max_num_hands=2,
-    min_detection_confidence=0.4,
+    min_detection_confidence=0.7,
     min_tracking_confidence=0.5)
 
 cap = cv2.VideoCapture(0)
+cap.set(cv2.CAP_PROP_FRAME_WIDTH, 960)
+cap.set(cv2.CAP_PROP_FRAME_HEIGHT, 540)
 
 while cap.isOpened():
     success, image = cap.read()

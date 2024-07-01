@@ -118,3 +118,9 @@ def get_gesture_class_names(path_to_csv):
     df = pd.read_csv(path_to_csv)
     gesture_class_names = list(df['Class Name'])
     return gesture_class_names
+
+
+def increase_exposure(frame, alpha=1.0, beta=50):
+    new_frame = cv2.convertScaleAbs(frame, alpha=alpha, beta=beta)
+
+    return new_frame
