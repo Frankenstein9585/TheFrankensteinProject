@@ -26,10 +26,6 @@ def execute_action(label):
         gesture_to_action[label]()
 
 
-last_label = None
-last_execution_time = 0
-debounce_time = 2.0
-
 while cap.isOpened():
     success, image = cap.read()
 
@@ -57,12 +53,6 @@ while cap.isOpened():
             image = utils.draw_bounding_box(True, image, bbox)
             image = utils.write_gesture_info(image, bbox, handedness,
                                              label)
-
-            current_time = time.time()
-            if label != last_label or (current_time - last_execution_time) > debounce_time:
-                execute_action(label)
-                last_label = label
-                last_execution_time = current_time
     # Display the resulting image
     cv2.imshow('MediaPipe Hand Landmarks', image)
 
