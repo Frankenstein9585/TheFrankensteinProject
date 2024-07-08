@@ -82,20 +82,15 @@ cap.set(cv2.CAP_PROP_FRAME_HEIGHT, 540)
 
 while cap.isOpened():
     success, image = cap.read()
-
     if not success:
         print("Ignoring empty camera frame.")
         continue
-
     # Flip the image horizontally for a more natural look
     image = cv2.flip(image, 1)
-
     # Convert the BGR image to RGB format for MediaPipe processing
     rgb_image = cv2.cvtColor(image, cv2.COLOR_BGR2RGB)
-
     # Run MediaPipe hands detection
     results = mp_hands.process(rgb_image)
-
     # Draw hand landmarks if a hand is detected
     if results.multi_hand_landmarks:
         for hand_landmarks, handedness in zip(results.multi_hand_landmarks, results.multi_handedness):
@@ -110,9 +105,9 @@ while cap.isOpened():
             #     print(f'Landmark {i}: {x:.2f} {y:.2f} {z:.2f})')
             normalized_landmark_list = utils.get_landmark_list(hand_landmarks, image)
             gesture_id = inference_engine(normalized_landmark_list)
-            image = utils.draw_bounding_box(True, image, bbox)
-            image = utils.write_gesture_info(image, bbox, handedness,
-                                             gesture_class_names[gesture_id])
+            # image = utils.draw_bounding_box(True, image, bbox)
+            # image = utils.write_gesture_info(image, bbox, handedness,
+            #                                  gesture_class_names[gesture_id])
     # Display the resulting image
     cv2.imshow('MediaPipe Hand Landmarks', image)
 

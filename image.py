@@ -10,10 +10,28 @@ import utils
 
 # Initialize MediaPipe Hands
 mp_hands = mp.solutions.hands
-hands = mp_hands.Hands(static_image_mode=True, max_num_hands=1, min_detection_confidence=0.5)
+hands = mp_hands.Hands(static_image_mode=True, max_num_hands=2, min_detection_confidence=0.5)
 
 # Initialize MediaPipe Drawing
 mp_drawing = mp.solutions.drawing_utils
+
+
+image = cv2.imread('00e4923b-2e51-4fff-8752-1fa9b9d30908.jpg')
+image = image[:(int((2 / 3) * image.shape[0])), :]
+
+image_rgb = cv2.cvtColor(image, cv2.COLOR_BGR2RGB)
+# Process the image and find hands
+results = hands.process(image_rgb)
+# Check if any hands are detected
+if results.multi_hand_landmarks:
+    for hand_landmarks in results.multi_hand_landmarks:
+        # Draw landmarks on the image
+        mp_drawing.draw_landmarks(image, hand_landmarks, mp_hands.HAND_CONNECTIONS)
+
+# Display the output image
+cv2.imshow('Hand Landmarks', image)
+cv2.waitKey(0)
+cv2.destroyAllWindows()
 
 
 def process_images(folder_name, csv_name):
@@ -27,7 +45,7 @@ def process_images(folder_name, csv_name):
             image = cv2.imread(image_path)
 
             # Crop the image to two-thirds its height to remove unwanted hand
-            image = image[:(int((2 / 3) * image.shape[0])), :]
+            # image = image[:(int((2 / 3) * image.shape[0])), :]
 
             # Convert the image to RGB
             image_rgb = cv2.cvtColor(image, cv2.COLOR_BGR2RGB)
@@ -57,8 +75,8 @@ def process_images(folder_name, csv_name):
     return gesture_class_map
 
 
-folder_name = 'hagrid_30k'
-landmark_csv = 'landmarks.csv'
-
-
-print(process_images(folder_name, landmark_csv))
+# folder_name = 'hagrid_30k'
+# landmark_csv = 'landmarks.csv'
+#
+#
+# print(process_images(folder_name, landmark_csv))
