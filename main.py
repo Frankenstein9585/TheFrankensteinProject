@@ -63,20 +63,18 @@ while cap.isOpened():
                 # Reset the timer when a new gesture is detected
                 current_gesture = label
                 gesture_start_time = time.time()
-                # print(f'{label}: {gesture_start_time}')
                 action_executed = False
             elif label in ['two_up', 'two_up_inverted']:
                 execute_action(label)
             else:
                 # Calculate the duration the current gesture has been held
                 gesture_duration = time.time() - gesture_start_time
-                print(f'{label}: {gesture_duration}')
-
                 # Perform the action if the gesture is held long enough
-                if gesture_duration >= min_duration_for_action and (time.time() - last_action_time) >= cooldown_period and not action_executed:
+                if gesture_duration >= min_duration_for_action \
+                        and (time.time() - last_action_time) >= cooldown_period \
+                        and not action_executed:
                     execute_action(current_gesture)
                     last_action_time = time.time()  # Reset the timer after executing the action to prevent
-                    # print(f'{label}: {last_action_time}')
                     # continuous execution
                     action_executed = True
 
